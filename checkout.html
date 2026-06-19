@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nvm Tech</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/tablet.css">
+  <link rel="stylesheet" href="assets/css/mobile.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  
+  <div class="page-loader" id="pageLoader">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="" alt="Logo" id="navLogo" style="height:32px" class="d-none">
+        <span id="navBrandName">nvm Tech</span>
+      </a>
+      <div class="d-flex align-items-center d-lg-none gap-1">
+        <a href="wishlist.html" class="nav-icon-btn"><i class="bi bi-heart"></i></a>
+        <a href="cart.html" class="nav-icon-btn position-relative">
+          <i class="bi bi-cart3"></i>
+          <span class="cart-badge" id="cartBadgeMobile" style="display:none">0</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+          <i class="bi bi-list fs-3"></i>
+        </button>
+      </div>
+      
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <form class="search-form mx-auto" id="searchForm" action="products.html">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search products, brands, categories..." id="searchInput" name="q" autocomplete="off">
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+        <ul class="navbar-nav ms-auto align-items-center gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a href="wishlist.html" class="nav-icon-btn d-none d-lg-flex"><i class="bi bi-heart"></i></a></li>
+          <li class="nav-item"><a href="cart.html" class="nav-icon-btn position-relative d-none d-lg-flex">
+            <i class="bi bi-cart3"></i>
+            <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+          </a></li>
+          <li class="nav-item dropdown" id="userMenuContainer">
+            <!-- Loaded dynamically in common.js -->
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="offcanvas offcanvas-end" id="mobileMenu">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title fw-bold">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body" id="mobileMenuBody">
+      <!-- Loaded dynamically in common.js -->
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="cart.html">Cart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+      </ol>
+    </nav>
+
+    <h2 class="fw-bold mb-4"><i class="bi bi-credit-card text-primary"></i> Checkout</h2>
+
+    <div class="row g-4">
+      <!-- Billing Address form -->
+      <div class="col-lg-8" id="checkoutBillingCol">
+        <div class="card p-4 shadow-sm border-light">
+          <h5 class="fw-bold border-bottom pb-2 mb-3">Shipping & B2B Details</h5>
+          
+          <form id="checkoutForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="billName" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Mobile Number</label>
+                <input type="tel" class="form-control" id="billPhone" pattern="[6-9][0-9]{9}" placeholder="10-digit mobile" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="billEmail" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Delivery Address</label>
+                <textarea class="form-control" id="billAddress" rows="3" placeholder="Shop/House number, Street, Area..." required></textarea>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control" id="billCity" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">State</label>
+                <select class="form-select" id="billState" required>
+                  <option value="" disabled selected>Select State</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="West Bengal">West Bengal</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Pincode</label>
+                <input type="text" class="form-control" id="billPincode" pattern="[0-9]{6}" placeholder="6 digits" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">GST Number (Optional B2B Claim)</label>
+                <input type="text" class="form-control" id="billGST" placeholder="22AAAAA0000A1Z5">
+              </div>
+              <div class="col-12 form-check ms-3">
+                <input type="checkbox" class="form-check-input" id="saveAddressChk" checked>
+                <label class="form-check-label small" for="saveAddressChk">Save this address to my profile</label>
+              </div>
+              <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-primary-gradient w-100 py-2.5">Proceed to UPI Payment</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Payment Section (Hidden initially until checkout form submitted) -->
+      <div class="col-lg-8" id="checkoutPaymentCol" style="display:none">
+        <div class="card p-4 shadow-sm border-light text-center">
+          <h5 class="fw-bold border-bottom pb-2 mb-3 text-start">Pay using Dynamic UPI QR Code</h5>
+          
+          <p class="text-muted mb-2">Scan the QR code below using Google Pay, PhonePe, Paytm, BHIM, or any UPI app to pay.</p>
+          <h4 class="fw-bold text-primary mb-3" id="payAmountText">₹0.00</h4>
+          
+          <div class="d-flex justify-content-center mb-3">
+            <div id="qrCodeContainer" class="p-3 border rounded bg-white shadow-sm">
+              <!-- QR Code renders here -->
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayGpay" href="#"><i class="bi bi-google"></i> GPay</a>
+            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayPhonepe" href="#"><i class="bi bi-phone"></i> PhonePe</a>
+            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayPaytm" href="#"><i class="bi bi-wallet"></i> Paytm</a>
+            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayBhim" href="#"><i class="bi bi-bank"></i> BHIM</a>
+          </div>
+
+          <!-- UTR Form -->
+          <form id="paymentSubmitForm" class="border-top pt-4 text-start">
+            <h6 class="fw-bold mb-3 text-secondary">Confirm your Payment transaction:</h6>
+            <div class="mb-3">
+              <label class="form-label">Transaction UTR / Ref Number (12 Digits)</label>
+              <input type="text" class="form-control" id="payUtr" placeholder="Enter the 12-digit UPI reference ID" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Remarks / Note (Optional)</label>
+              <input type="text" class="form-control" id="payRef" placeholder="e.g. Paid from HDFC account">
+            </div>
+            <button type="submit" class="btn btn-success w-100 py-2.5"><i class="bi bi-check-circle me-1"></i> Submit Transaction Details</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Order Summary sidebar -->
+      <aside class="col-lg-4">
+        <div class="card p-3 shadow-sm border-light">
+          <h5 class="fw-bold border-bottom pb-2">Checkout Summary</h5>
+          
+          <div id="checkoutSummaryItems" class="max-height-300 overflow-y-auto mb-3">
+            <!-- Items rendered -->
+          </div>
+
+          <div class="d-flex justify-content-between mb-2 small text-muted">
+            <span>Subtotal (Excl. GST)</span>
+            <span id="chkSubtotal">₹0.00</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2 small text-muted">
+            <span>GST Tax</span>
+            <span id="chkGST">₹0.00</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3 small text-muted">
+            <span>Shipping Charge</span>
+            <span id="chkShipping">₹0.00</span>
+          </div>
+          
+          <div class="d-flex justify-content-between fw-bold fs-5 mb-0 border-top pt-2">
+            <span>Total Payable</span>
+            <span id="chkGrandTotal" class="text-primary">₹0.00</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="footer-brand">
+            <h4 id="footerBrandName" class="fw-bold mb-2 text-white">nvm Tech</h4>
+            <p id="footerTagline" class="text-muted small">Your Trusted Partner for Electrical & Industrial Solutions</p>
+          </div>
+          <div class="footer-contact mt-3 small text-muted">
+            <p class="mb-1"><i class="bi bi-geo-alt me-2"></i> <span id="footerAddress">India</span></p>
+            <p class="mb-1"><i class="bi bi-envelope me-2"></i> <span id="footerEmail">info@nvmtech.com</span></p>
+            <p class="mb-0"><i class="bi bi-telephone me-2"></i> <span id="footerPhone">+91 XXXXXXXXXX</span></p>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6">
+          <h5 class="text-white small fw-bold text-uppercase">Quick Links</h5>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <h5 class="text-white small fw-bold text-uppercase">Categories</h5>
+          <ul class="footer-links" id="footerCategories">
+            <li><a href="products.html?cat=MCB">MCB Switchgear</a></li>
+            <li><a href="products.html?cat=PLC">PLCs & Controllers</a></li>
+            <li><a href="products.html?cat=VFD">VFD Motor Drives</a></li>
+            <li><a href="products.html?cat=Sensors">Industrial Sensors</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <h5 class="text-white small fw-bold text-uppercase">My Account</h5>
+          <ul class="footer-links">
+            <li><a href="profile.html">My Profile</a></li>
+            <li><a href="orders.html">My Orders</a></li>
+            <li><a href="wishlist.html">Wishlist</a></li>
+            <li><a href="cart.html">Cart</a></li>
+          </ul>
+          <div class="footer-social mt-3">
+            <a href="#" id="socialFb"><i class="bi bi-facebook"></i></a>
+            <a href="#" id="socialInsta"><i class="bi bi-instagram"></i></a>
+            <a href="#" id="socialTwitter"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" id="socialLinkedin"><i class="bi bi-linkedin"></i></a>
+            <a href="#" id="socialYoutube"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr class="border-secondary mt-4 mb-3">
+      <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p class="mb-0 small">&copy; <span id="footerYear">2026</span> <span id="footerCopyright">nvm Tech</span>. All Rights Reserved.</p>
+        <p class="mb-0 small text-muted">Designed for Electrical & Industrial Automations</p>
+      </div>
+    </div>
+  </footer>
+
+  <nav class="mobile-bottom-nav d-lg-none" id="mobileBottomNav">
+    <a href="index.html" class="bottom-nav-item"><i class="bi bi-house"></i><span>Home</span></a>
+    <a href="products.html" class="bottom-nav-item"><i class="bi bi-grid"></i><span>Products</span></a>
+    <a href="cart.html" class="bottom-nav-item position-relative">
+      <i class="bi bi-cart3"></i>
+      <span>Cart</span>
+      <span class="cart-badge" id="cartBadgeBottom" style="display:none">0</span>
+    </a>
+    <a href="wishlist.html" class="bottom-nav-item"><i class="bi bi-heart"></i><span>Wishlist</span></a>
+    <a href="profile.html" class="bottom-nav-item" id="bottomNavAccount"><i class="bi bi-person"></i><span>Account</span></a>
+  </nav>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer"></div>
+
+  <!-- CDN scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/common.js?v=1.1"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+  <script src="assets/js/checkout.js?v=1.1"></script>
+  <script src="assets/js/payment.js?v=1.1"></script>
+</body>
+</html>
