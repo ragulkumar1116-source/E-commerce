@@ -556,3 +556,7 @@ a:hover {
 .footer-bottom .text-muted {
     color: #ffffff !important; /* White */
 }
+
+#footerTagline {
+    color: #ffffff !important; /* White */
+}
