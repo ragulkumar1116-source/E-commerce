@@ -552,3 +552,7 @@ a:hover {
   font-size: 0.9rem;
   margin-top: 2rem;
 }
+
+.footer-bottom .text-muted {
+    color: #ffffff !important; /* White */
+}
