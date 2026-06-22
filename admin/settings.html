@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>White-Label Configurations - Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/tablet.css">
+  <link rel="stylesheet" href="../assets/css/mobile.css">
+</head>
+<body>
+  
+  <div class="page-loader" id="pageLoader">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand">
+        <i class="bi bi-lightning-charge-fill"></i>
+        <h4 id="sidebarBrandName">E&P SMART</h4>
+        <small class="opacity-75">Admin Control</small>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link "><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a>
+<a href="products.html" class="sidebar-link "><i class="bi bi-box-seam"></i> <span>Products</span></a>
+<a href="add-product.html" class="sidebar-link "><i class="bi bi-plus-circle"></i> <span>Add Product</span></a>
+<a href="categories.html" class="sidebar-link "><i class="bi bi-tags"></i> <span>Categories</span></a>
+<a href="orders.html" class="sidebar-link "><i class="bi bi-receipt"></i> <span>Orders</span></a>
+<a href="customers.html" class="sidebar-link "><i class="bi bi-people"></i> <span>Customers</span></a>
+<a href="payments.html" class="sidebar-link "><i class="bi bi-credit-card"></i> <span>Payments</span></a>
+<a href="reports.html" class="sidebar-link "><i class="bi bi-bar-chart-line"></i> <span>Reports</span></a>
+<a href="notifications.html" class="sidebar-link "><i class="bi bi-bell"></i> <span>Notifications</span></a>
+<a href="settings.html" class="sidebar-link active"><i class="bi bi-gear"></i> <span>Settings</span></a>
+
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" id="adminLogout" class="sidebar-link text-danger"><i class="bi bi-box-arrow-left"></i> <span>Logout</span></a>
+      </div>
+    </aside>
+
+    <!-- Sidebar Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-link d-lg-none p-0 text-dark" id="sidebarToggle"><i class="bi bi-list fs-3"></i></button>
+          <h4 class="admin-page-title mb-0 fw-bold">White-Label Configurations</h4>
+        </div>
+        <div class="admin-header-actions">
+          <div class="dropdown">
+            <button class="btn btn-link position-relative text-dark p-0" data-bs-toggle="dropdown">
+              <i class="bi bi-bell fs-5"></i>
+              <span class="notification-dot" id="notifDot" style="display:none"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end notification-dropdown shadow-lg p-2" id="notifDropdown" style="width:300px; max-height:350px; overflow-y:auto;">
+              <div class="dropdown-header">System Notifications</div>
+              <div id="notifList"><p class="text-muted p-3 mb-0 small text-center">No alerts</p></div>
+            </div>
+          </div>
+          <div class="admin-user-info dropdown">
+            <button class="btn btn-link dropdown-toggle text-dark fw-semibold" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle fs-5 me-1 text-primary"></i> <span id="adminName">Admin</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-md">
+              <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear"></i> Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" id="adminLogoutHeader"><i class="bi bi-box-arrow-left"></i> Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        
+  <div class="card p-4 shadow-sm border-light mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold mb-0">Dynamic Branding & Store Configurations</h5>
+      <span class="badge bg-primary fs-7">Whitelabel Configuration</span>
+    </div>
+    
+    <form id="settingsForm">
+      <div class="accordion" id="accordionSettings">
+        
+        <!-- Branding Section -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBranding">
+              Company Branding (Name, Logo)
+            </button>
+          </h2>
+          <div id="collapseBranding" class="accordion-collapse collapse show" data-bs-parent="#accordionSettings">
+            <div class="accordion-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label small">Company / Store Name</label>
+                  <input type="text" class="form-control" id="storeName" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small">Branding Tagline</label>
+                  <input type="text" class="form-control" id="storeTagline">
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label small">Store Logo URL</label>
+                  <input type="text" class="form-control" id="storeLogoUrl" placeholder="https://external-image-link.com/logo.png">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContact">
+              Enquiry Contacts & Social Channels
+            </button>
+          </h2>
+          <div id="collapseContact" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
+            <div class="accordion-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label small">Email Address</label>
+                  <input type="email" class="form-control" id="storeEmail" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small">Contact Mobile Number</label>
+                  <input type="text" class="form-control" id="storePhone" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small">Facebook link</label>
+                  <input type="text" class="form-control" id="storeFb">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small">Instagram link</label>
+                  <input type="text" class="form-control" id="storeInsta">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small">Linkedin Page Link</label>
+                  <input type="text" class="form-control" id="storeLi">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Addresses Section -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddress">
+              Street Address Location
+            </button>
+          </h2>
+          <div id="collapseAddress" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
+            <div class="accordion-body">
+              <div class="mb-3">
+                <label class="form-label small">Display Address Text</label>
+                <textarea class="form-control" id="storeAddress" rows="3" required></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPI Payments Config -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUPI">
+              Merchant UPI payments Setup
+            </button>
+          </h2>
+          <div id="collapseUPI" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
+            <div class="accordion-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label small">UPI Merchant ID (VPA)</label>
+                  <input type="text" class="form-control" id="storeUpiId" placeholder="e.g. epsmart@oksbi" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small">Merchant Account Name</label>
+                  <input type="text" class="form-control" id="storeUpiName" placeholder="e.g. E&P SMART Store" required>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logistics Config -->
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogistics">
+              Logistics & Tax Defaults
+            </button>
+          </h2>
+          <div id="collapseLogistics" class="accordion-collapse collapse" data-bs-parent="#accordionSettings">
+            <div class="accordion-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label small">Shipping Charges (INR)</label>
+                  <input type="number" class="form-control" id="storeShipCharge" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small">Free Shipping Threshold (INR)</label>
+                  <input type="number" class="form-control" id="storeFreeShipLimit" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small">Default GST %</label>
+                  <input type="number" class="form-control" id="storeDefaultGst" required>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary px-5 py-2.5"><i class="bi bi-save-fill me-1"></i> Save Store Configurations</button>
+      </div>
+    </form>
+  </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer"></div>
+
+  <!-- CDN Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/common.js"></script>
+  <script>
+    // Sidebar mobile toggle
+    document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+      document.getElementById('adminSidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    });
+    document.getElementById('sidebarOverlay')?.addEventListener('click', () => {
+      document.getElementById('adminSidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    });
+    
+    // Auth role protection & display admin details
+    getCurrentUser().then(user => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      return getUserRole(user.uid).then(role => {
+        if (role !== 'admin') {
+          showToast('Unauthorized access redirecting...', 'error');
+          setTimeout(() => window.location.href = '../index.html', 1500);
+        } else {
+          document.getElementById('adminName').textContent = user.displayName || 'Admin';
+        }
+      });
+    });
+
+    const triggerLogout = (e) => {
+      e.preventDefault();
+      showLoader();
+      auth.signOut().then(() => window.location.href = 'login.html');
+    };
+    document.getElementById('adminLogout')?.addEventListener('click', triggerLogout);
+    document.getElementById('adminLogoutHeader')?.addEventListener('click', triggerLogout);
+  </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Load Settings
+    db.ref('settings/store').once('value').then(snap => {
+      const data = snap.val() || {};
+      document.getElementById('storeName').value = data.companyName || 'E&P SMART';
+      document.getElementById('storeTagline').value = data.tagline || '';
+      document.getElementById('storeLogoUrl').value = data.logoUrl || CONFIG.store.logoUrl;
+      document.getElementById('storeEmail').value = data.email || 'info@epsmart.com';
+      document.getElementById('storePhone').value = data.phone || '';
+      document.getElementById('storeFb').value = data.facebookUrl || '';
+      document.getElementById('storeInsta').value = data.instagramUrl || '';
+      document.getElementById('storeLi').value = data.linkedinUrl || '';
+      document.getElementById('storeAddress').value = data.address || '';
+      document.getElementById('storeUpiId').value = data.upiMerchantId || 'YOUR_UPI_ID';
+      document.getElementById('storeUpiName').value = data.upiDisplayName || 'E&P SMART Store';
+      document.getElementById('storeShipCharge').value = data.shippingCharges || 100;
+      document.getElementById('storeFreeShipLimit').value = data.freeShippingThreshold || 5000;
+      document.getElementById('storeDefaultGst').value = data.defaultGst || 18;
+    });
+
+    // Save Submit Form
+    document.getElementById('settingsForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      showLoader();
+      
+      const config = {
+        companyName: sanitizeInput(document.getElementById('storeName').value),
+        tagline: sanitizeInput(document.getElementById('storeTagline').value),
+        logoUrl: sanitizeInput(document.getElementById('storeLogoUrl').value),
+        email: sanitizeInput(document.getElementById('storeEmail').value),
+        phone: sanitizeInput(document.getElementById('storePhone').value),
+        facebookUrl: sanitizeInput(document.getElementById('storeFb').value),
+        instagramUrl: sanitizeInput(document.getElementById('storeInsta').value),
+        linkedinUrl: sanitizeInput(document.getElementById('storeLi').value),
+        address: sanitizeInput(document.getElementById('storeAddress').value),
+        upiMerchantId: sanitizeInput(document.getElementById('storeUpiId').value),
+        upiDisplayName: sanitizeInput(document.getElementById('storeUpiName').value),
+        shippingCharges: Number(document.getElementById('storeShipCharge').value),
+        freeShippingThreshold: Number(document.getElementById('storeFreeShipLimit').value),
+        defaultGst: Number(document.getElementById('storeDefaultGst').value)
+      };
+
+      db.ref('settings/store').update(config).then(() => {
+        hideLoader();
+        showToast('Store settings saved successfully!', 'success');
+        // Refresh settings locally in common.js cache
+        loadStoreSettings();
+      }).catch(err => {
+        hideLoader();
+        showToast(err.message, 'error');
+      });
+    });
+  });
+</script>
+</body>
+</html>

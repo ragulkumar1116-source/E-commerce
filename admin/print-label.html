@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print Shipping Label - Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', 'Roboto', sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .label-card {
+      width: 4in;
+      height: 6in;
+      background: white;
+      border: 1px dashed #999;
+      margin: 30px auto;
+      padding: 12px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      position: relative;
+    }
+    .label-header {
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+    }
+    .label-section {
+      border-bottom: 1px dashed #ddd;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+    }
+    .label-section:last-of-type {
+      border-bottom: none;
+    }
+    .sender-title, .recipient-title {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+      margin-bottom: 2px;
+    }
+    .address-text {
+      font-size: 0.8rem;
+      line-height: 1.25;
+      font-weight: 500;
+      margin: 0;
+    }
+    .bold-address {
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .barcode-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    #barcode {
+      width: 100%;
+      max-height: 48px;
+    }
+    .barcode-text {
+      font-size: 0.65rem;
+      font-family: monospace;
+      margin-top: 2px;
+      letter-spacing: 1px;
+    }
+    .routing-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 2px solid #000;
+      padding-top: 6px;
+      margin-top: auto;
+    }
+    #qrcode {
+      padding: 2px;
+      background: white;
+    }
+    #qrcode img {
+      width: 72px;
+      height: 72px;
+    }
+    .meta-details {
+      font-size: 0.7rem;
+      line-height: 1.3;
+    }
+    .badge-status {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 6px;
+      border-radius: 4px;
+      border: 1px solid #000;
+      display: inline-block;
+      margin-top: 2px;
+    }
+    
+    /* Print Styles */
+    @media print {
+      body {
+        background-color: white;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .label-card {
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        page-break-inside: avoid;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Print Controls (hidden during print) -->
+  <div class="no-print d-flex gap-2 p-3 bg-white border-bottom justify-content-center sticky-top shadow-sm">
+    <button class="btn btn-primary px-4" onclick="window.print()"><i class="bi bi-printer me-1"></i> Print Label</button>
+    <button class="btn btn-outline-secondary px-4" onclick="window.close()"><i class="bi bi-x-circle me-1"></i> Close Window</button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="text-center py-5 no-print" id="labelLoader">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading Label...</span>
+    </div>
+    <p class="text-muted mt-3">Loading order details and generating label...</p>
+  </div>
+
+  <!-- Thermal Label Container -->
+  <div class="label-card" id="labelCard" style="display:none">
+    
+    <!-- Header -->
+    <div class="label-header d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="fw-bold mb-0 text-uppercase" style="letter-spacing:1px; font-size:1.1rem" id="lblCompanyName">E&P SMART</h5>
+        <small class="text-muted" style="font-size:0.6rem">PARCEL DELIVERY SLIP</small>
+      </div>
+      <div class="text-end">
+        <span class="fw-extrabold" style="font-size:0.95rem; font-weight:800" id="lblOrderDate">DD-MMM-YYYY</span>
+      </div>
+    </div>
+
+    <!-- Sender Details -->
+    <div class="label-section">
+      <div class="sender-title">Sender (Return Address)</div>
+      <p class="address-text" id="lblSenderName">E&P SMART Store</p>
+      <p class="address-text text-muted" style="font-size:0.7rem" id="lblSenderAddress">Store Address Location</p>
+      <p class="address-text text-muted" style="font-size:0.7rem" id="lblSenderContact">Phone: +91 XXXXXXXXXX</p>
+    </div>
+
+    <!-- Recipient Details -->
+    <div class="label-section bg-light p-2 rounded">
+      <div class="recipient-title text-primary">Ship To (Recipient)</div>
+      <p class="address-text bold-address text-dark" id="lblCustName">Customer Name</p>
+      <p class="address-text text-dark" id="lblCustAddress">Shipping Address Line</p>
+      <p class="address-text text-dark" id="lblCustCityState">City, State</p>
+      <p class="address-text bold-address text-dark mt-1"><i class="bi bi-geo-alt"></i> PINCODE: <span id="lblCustPincode">XXXXXX</span></p>
+      <p class="address-text bold-address text-dark"><i class="bi bi-telephone"></i> PHONE: <span id="lblCustPhone">+91 XXXXXXXXXX</span></p>
+    </div>
+
+    <!-- Barcode Box -->
+    <div class="barcode-container">
+      <svg id="barcode"></svg>
+      <span class="barcode-text" id="lblBarcodeVal">ORDER-XXXXXX</span>
+    </div>
+
+    <!-- Footer Area (QR & Stats) -->
+    <div class="routing-container">
+      <div class="meta-details">
+        <div><strong>Order ID:</strong> <span id="lblOrderId" style="font-family:monospace">N/A</span></div>
+        <div><strong>Total Qty:</strong> <span id="lblTotalItems">0</span> items</div>
+        <div><strong>Payment:</strong> <span id="lblPaymentStatus">N/A</span></div>
+        <div id="lblPayBadge" class="badge-status bg-dark text-white">VERIFIED</div>
+      </div>
+      <div id="qrcode"></div>
+    </div>
+
+  </div>
+
+  <!-- CDN scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/common.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Authenticate Role Access
+      getCurrentUser().then(user => {
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+        return getUserRole(user.uid).then(role => {
+          if (role !== 'admin') {
+            alert('Unauthorized access. Redirecting...');
+            window.location.href = '../index.html';
+          } else {
+            loadLabelDetails();
+          }
+        });
+      }).catch(err => {
+        console.error("Auth protection crash:", err);
+        window.location.href = 'login.html';
+      });
+    });
+
+    function loadLabelDetails() {
+      const orderId = getUrlParam('id');
+      if (!orderId) {
+        alert("Order ID is missing!");
+        window.close();
+        return;
+      }
+
+      // Fetch dynamic settings & order info
+      Promise.all([
+        db.ref('settings/store').once('value'),
+        db.ref(`orders/${orderId}`).once('value')
+      ]).then(([settingsSnap, orderSnap]) => {
+        const settings = settingsSnap.val() || {};
+        const order = orderSnap.val();
+
+        if (!order) {
+          alert("Order details not found in database!");
+          window.close();
+          return;
+        }
+
+        // 2. Populate Sender (FROM) Info
+        document.getElementById('lblCompanyName').textContent = settings.companyName || "E&P SMART";
+        document.getElementById('lblSenderName').textContent = settings.companyName || "E&P SMART Store";
+        document.getElementById('lblSenderAddress').textContent = settings.address || "";
+        document.getElementById('lblSenderContact').textContent = `Phone: ${settings.phone || ''} | Email: ${settings.email || ''}`;
+
+        // 3. Populate Recipient (TO) Info
+        document.getElementById('lblCustName').textContent = order.customerName || "N/A";
+        document.getElementById('lblCustAddress').textContent = order.shippingAddress.address || "N/A";
+        document.getElementById('lblCustCityState').textContent = `${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''}`;
+        document.getElementById('lblCustPincode').textContent = order.shippingAddress.pincode || "N/A";
+        document.getElementById('lblCustPhone').textContent = order.customerPhone || "N/A";
+
+        // 4. Populate Metadata
+        document.getElementById('lblOrderId').textContent = order.orderId;
+        document.getElementById('lblOrderDate').textContent = formatDate(order.createdAt);
+        document.getElementById('lblPaymentStatus').textContent = (order.paymentStatus || 'PENDING').toUpperCase();
+        
+        const badge = document.getElementById('lblPayBadge');
+        if ((order.paymentStatus || 'pending').toLowerCase() === 'approved') {
+          badge.textContent = 'PAID';
+          badge.className = 'badge-status bg-success text-white border-success';
+        } else {
+          badge.textContent = 'COD / UNVERIFIED';
+          badge.className = 'badge-status bg-warning text-dark border-warning';
+        }
+
+        // Calculate total items quantity
+        let totalItemsQty = 0;
+        if (order.items) {
+          order.items.forEach(item => totalItemsQty += Number(item.quantity || 1));
+        }
+        document.getElementById('lblTotalItems').textContent = totalItemsQty;
+
+        // 5. Generate Barcode (using Order ID)
+        JsBarcode("#barcode", order.orderId, {
+          format: "CODE128",
+          lineColor: "#000000",
+          width: 1.8,
+          height: 38,
+          displayValue: false
+        });
+        document.getElementById('lblBarcodeVal').textContent = order.orderId;
+
+        // 6. Generate QR Code (using Order ID)
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = '';
+        new QRCode(qrContainer, {
+          text: order.orderId,
+          width: 72,
+          height: 72,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+
+        // 7. Display elements and trigger print dialog
+        document.getElementById('labelLoader').style.display = 'none';
+        document.getElementById('labelCard').style.display = 'flex';
+
+        // Wait 600ms for resources (images, fonts, barcodes) to finish drawing before opening printer dialog
+        setTimeout(() => {
+          window.print();
+        }, 600);
+
+      }).catch(err => {
+        console.error("Failed to load shipping label data:", err);
+        alert("Error loading label details from database: " + err.message);
+      });
+    }
+  </script>
+</body>
+</html>
