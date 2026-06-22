@@ -1,8 +1,8 @@
 // Global shared store settings cached
 let storeSettings = {
-  companyName: "nvm Tech",
+  companyName: "E&P SMART",
   tagline: "Your Trusted Partner for Electrical & Industrial Solutions",
-  logoUrl: "",
+  logoUrl: "https://res.cloudinary.com/ddlr8lkot/image/upload/v1781878630/ChatGPT_Image_Jun_19_2026_07_46_20_PM_ribkun.png",
   email: "info@nvmtech.com",
   phone: "+91 98765 43210",
   address: "123, Industrial Area, Phase-1, New Delhi, India",
