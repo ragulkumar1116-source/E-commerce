@@ -1,21 +1,130 @@
-// Global shared store settings cached
-let storeSettings = {
-  companyName: "E&P SMART",
-  tagline: "Your Trusted Partner for Electrical & Industrial Solutions",
-  logoUrl: "https://res.cloudinary.com/ddlr8lkot/image/upload/v1781878630/ChatGPT_Image_Jun_19_2026_07_46_20_PM_ribkun.png",
-  email: "info@nvmtech.com",
-  phone: "+91 98765 43210",
-  address: "123, Industrial Area, Phase-1, New Delhi, India",
-  facebookUrl: "#",
-  instagramUrl: "#",
-  twitterUrl: "#",
-  linkedinUrl: "#",
-  youtubeUrl: "#",
-  defaultGst: 18,
-  shippingCharges: 100,
-  freeShippingThreshold: 5000,
-  currencySymbol: "₹"
+// Global Configuration defaults (easily customizable in this single file)
+const CONFIG = {
+  store: {
+    companyName: "E&P SMART",
+    tagline: "Your Trusted Partner for Electrical & Industrial Solutions",
+    logoUrl: "https://res.cloudinary.com/ddlr8lkot/image/upload/v1781878630/ChatGPT_Image_Jun_19_2026_07_46_20_PM_ribkun.png",
+    email: "info@epsmart.com",
+    phone: "+91 98765 43210",
+    address: "123, Industrial Area, Phase-1, New Delhi, India",
+    facebookUrl: "#",
+    instagramUrl: "#",
+    twitterUrl: "#",
+    linkedinUrl: "#",
+    youtubeUrl: "#",
+    defaultGst: 18,
+    shippingCharges: 100,
+    freeShippingThreshold: 5000,
+    currencySymbol: "₹",
+    upiMerchantId: "merchant@upi"
+  },
+  
+  categories: [
+    { name: "MCB", image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400", description: "Miniature Circuit Breakers", status: "active" },
+    { name: "MCCB", image: "https://images.unsplash.com/photo-1618042164219-62c820f10723?w=400", description: "Molded Case Circuit Breakers", status: "active" },
+    { name: "Relay", image: "https://images.unsplash.com/photo-1590372847085-f3991147f0bc?w=400", description: "Control Relays and Sockets", status: "active" },
+    { name: "Contactor", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400", description: "Power Contactors & Overloads", status: "active" },
+    { name: "PLC", image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?w=400", description: "Programmable Logic Controllers", status: "active" },
+    { name: "VFD", image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400", description: "Variable Frequency Drives", status: "active" },
+    { name: "Sensors", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400", description: "Proximity, Photoelectric & Limit Sensors", status: "active" },
+    { name: "Cable", image: "https://images.unsplash.com/photo-1601524909162-be87252be298?w=400", description: "Industrial Power & Control Cables", status: "active" },
+    { name: "Switches", image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400", description: "Industrial Control switches", status: "active" },
+    { name: "Push Buttons", image: "https://images.unsplash.com/photo-1596495578065-6e076baf155f?w=400", description: "Control Push Buttons & Actuators", status: "active" },
+    { name: "Indicator Lamps", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400", description: "LED Panel Indicators", status: "active" },
+    { name: "SMPS", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400", description: "Switch Mode Power Supplies", status: "active" },
+    { name: "Power Supply", image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400", description: "Industrial Power Supplies", status: "active" },
+    { name: "Instrumentation", image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=400", description: "Process Measurement Instruments", status: "active" },
+    { name: "Industrial Automation", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400", description: "Industrial Automation Systems", status: "active" }
+  ],
+  
+  products: [
+    {
+      name: "Siemens 3 Pole Contactor 9A 230V AC Coil",
+      sku: "3RT20161AP01",
+      brand: "Siemens",
+      category: "Contactor",
+      subCategory: "Power Contactors",
+      hsnCode: "85364900",
+      price: 1550.00,
+      discountPrice: 1240.00,
+      gstPercent: 18,
+      stockQuantity: 45,
+      weight: "0.3 kg",
+      warranty: "12 Months",
+      description: "High reliability Siemens 3RT contactor suitable for industrial motor control switching application.",
+      specifications: {
+        "Poles": "3 Pole",
+        "Coil Voltage": "230V AC",
+        "Current Rating": "9 Amps",
+        "Frequency": "50/60 Hz"
+      },
+      images: [
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600",
+        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600"
+      ],
+      featured: true,
+      bestSeller: true,
+      status: "active"
+    },
+    {
+      name: "Schneider Acti9 3 Pole MCB C-Curve 16A 10kA",
+      sku: "A9F74316",
+      brand: "Schneider Electric",
+      category: "MCB",
+      subCategory: "Miniature Circuit Breakers",
+      hsnCode: "85362030",
+      price: 890.00,
+      discountPrice: 712.00,
+      gstPercent: 18,
+      stockQuantity: 120,
+      weight: "0.25 kg",
+      warranty: "18 Months",
+      description: "Schneider Acti9 C120H series MCB with C-Curve characteristic and 10kA breaking capacity for safety industrial protection.",
+      specifications: {
+        "Poles": "3 Pole",
+        "Tripping Curve": "C Curve",
+        "Current Rating": "16 Amps",
+        "Breaking Capacity": "10 kA"
+      },
+      images: [
+        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600"
+      ],
+      featured: true,
+      bestSeller: false,
+      status: "active"
+    },
+    {
+      name: "Omron Industrial Photoelectric Sensor 2m Range",
+      sku: "E3Z-T61 2M",
+      brand: "Omron",
+      category: "Sensors",
+      subCategory: "Photoelectric Sensors",
+      hsnCode: "85365090",
+      price: 3200.00,
+      discountPrice: 2850.00,
+      gstPercent: 18,
+      stockQuantity: 8,
+      weight: "0.15 kg",
+      warranty: "12 Months",
+      description: "Compact Omron E3Z photoelectric sensor with through-beam sensing style and built-in amplifier.",
+      specifications: {
+        "Sensing Mode": "Through-beam",
+        "Sensing Distance": "2 Meters",
+        "Output Type": "NPN",
+        "Power Voltage": "12-24V DC"
+      },
+      images: [
+        "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=600"
+      ],
+      featured: false,
+      bestSeller: true,
+      status: "active"
+    }
+  ]
 };
+
+// Global shared store settings cached
+let storeSettings = { ...CONFIG.store };
 
 // Toast Notification System
 function showToast(message, type = 'info') {
@@ -144,7 +253,10 @@ function getCurrentUser() {
 }
 
 function getUserRole(uid) {
-  return db.ref(`users/${uid}/role`).once('value').then(snap => snap.val() || 'customer');
+  return db.ref(`users/${uid}`).once('value').then(snap => {
+    const data = snap.val() || {};
+    return data.role || 'customer';
+  });
 }
 
 // Dynamic Branding Loader
@@ -220,7 +332,7 @@ function applyDynamicBranding() {
   const yt = document.getElementById('socialYoutube'); if (yt) yt.href = storeSettings.youtubeUrl;
 
   // Document Title prefix
-  if (document.title === "nvm Tech" || !document.title) {
+  if (document.title === "E&P SMART" || !document.title) {
     document.title = storeSettings.companyName;
   }
 }
@@ -326,10 +438,10 @@ function renderNavbarMenu() {
       });
     } else {
       // Guest Links
-      container.className = "nav-item d-flex gap-2";
+      container.className = "nav-item d-flex gap-2 ms-2 align-items-center";
       container.innerHTML = `
-        <a class="btn btn-outline-primary btn-sm" href="auth/login.html">Login</a>
-        <a class="btn btn-primary btn-sm" href="auth/register.html">Register</a>
+        <a class="btn btn-outline-primary btn-sm px-3" href="auth/login.html">Login</a>
+        <a class="btn btn-primary btn-sm px-3" href="auth/register.html">Register</a>
       `;
 
       if (mobileMenu) {
@@ -397,8 +509,11 @@ function initBackToTop() {
 }
 
 // Connection Alert listener
+let hasConnectedOnce = false;
 db.ref('.info/connected').on('value', (snap) => {
-  if (snap.val() === false) {
+  if (snap.val() === true) {
+    hasConnectedOnce = true;
+  } else if (snap.val() === false && hasConnectedOnce) {
     showToast("You are offline. Reconnecting...", "warning");
   }
 });
@@ -424,16 +539,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const yr = document.getElementById('footerYear');
   if (yr) yr.textContent = new Date().getFullYear();
 });
-
-// Debounce helper to throttle function executions
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
