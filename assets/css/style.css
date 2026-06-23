@@ -561,11 +561,6 @@ a:hover {
     color: #ffffff !important; /* White */
 }
 
-#footerEmail {
-    color: #ff9700;
-    text-decoration: none;
-}
-
 #footerPhone {
     color: #ff9800;
     text-decoration: none;
@@ -574,4 +569,8 @@ a:hover {
 #footerEmail:hover,
 #footerPhone:hover {
     color: #ffffff;
+}
+
+#footerAddress{
+    color: #ff9800 !important;
 }
