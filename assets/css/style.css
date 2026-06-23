@@ -570,6 +570,8 @@ a:hover {
     text-decoration: none;
 
 
-#footerAddress{
-    color: #ff9800 !important;
+#footerAddress {
+    color: #ffffff;
+   text-decoration: none;
 }
+
