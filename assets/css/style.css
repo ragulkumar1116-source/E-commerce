@@ -562,13 +562,16 @@ a:hover {
 }
 
 #footerEmail {
-    color: #ffffff !important; /* White */
-}
-
-#footerAddress {
-    color: #ffffff !important; /* White */
+    color: #4da6ff;
+    text-decoration: none;
 }
 
 #footerPhone {
-    color: #ffffff !important; /* White */
+    color: #ff9800;
+    text-decoration: none;
+}
+
+#footerEmail:hover,
+#footerPhone:hover {
+    color: #ffffff;
 }
