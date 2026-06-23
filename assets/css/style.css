@@ -565,11 +565,10 @@ a:hover {
     color: #ff9800;
     text-decoration: none;
 }
-
-#footerEmail:hover,
-#footerPhone:hover {
+#footerEmail {
     color: #ff9800;
-}
+    text-decoration: none;
+
 
 #footerAddress{
     color: #ff9800 !important;
