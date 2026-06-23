@@ -561,17 +561,15 @@ a:hover {
     color: #ffffff !important; /* White */
 }
 
-#footerPhone {
-    color: #ff9800;
-    text-decoration: none;
-}
-#footerEmail {
-    color: #ff9800;
-    text-decoration: none;
-
-
 #footerAddress {
     color: #ffffff;
-   text-decoration: none;
+}
+
+#footerEmail {
+    color: #4da6ff; /* Blue */
+}
+
+#footerPhone {
+    color: #ff9800; /* Orange */
 }
 
