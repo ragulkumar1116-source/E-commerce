@@ -71,6 +71,7 @@ function renderOrdersTable(list) {
           <div class="d-flex gap-1 justify-content-center">
             <button class="btn btn-xs btn-outline-primary py-1 px-2 small" onclick="viewOrderDetails('${o.orderId}')"><i class="bi bi-eye"></i> Details</button>
             <a href="print-label.html?id=${o.orderId}" target="_blank" class="btn btn-xs btn-outline-success py-1 px-2 small"><i class="bi bi-printer"></i> Label</a>
+            <button class="btn btn-xs btn-outline-danger py-1 px-2 small" onclick="deleteOrder('${o.orderId}')"><i class="bi bi-trash"></i> Delete</button>
           </div>
         </td>
       </tr>
@@ -378,6 +379,21 @@ function notifyCustomer(orderId, type) {
   });
 }
 
+function deleteOrder(orderId) {
+  if (confirm(`Are you sure you want to permanently delete order #${orderId}? This action cannot be undone.`)) {
+    showLoader();
+    db.ref(`orders/${orderId}`).remove().then(() => {
+      hideLoader();
+      showToast(`Order #${orderId.substring(0,8)} deleted successfully`, 'success');
+      loadAdminOrders();
+    }).catch(e => {
+      hideLoader();
+      showToast(e.message, 'error');
+    });
+  }
+}
+
 window.viewOrderDetails = viewOrderDetails;
 window.saveCourierDetails = saveCourierDetails;
 window.notifyCustomer = notifyCustomer;
+window.deleteOrder = deleteOrder;
