@@ -362,24 +362,60 @@ function initDetailsPage() {
     const specTable = document.getElementById('detailSpecsTable');
     if (specTable) {
       let specHtml = '';
-      try {
-        const specs = typeof p.specifications === 'string' ? JSON.parse(p.specifications) : p.specifications;
-        if (specs && Object.keys(specs).length > 0) {
-          Object.keys(specs).forEach(key => {
+      const specsRaw = p.specifications || '';
+      
+      if (!specsRaw || specsRaw.trim() === '') {
+        specTable.innerHTML = '<tr><td colspan="2" class="text-muted text-center py-3">No detailed specifications available.</td></tr>';
+      } else {
+        let parsedSpecs = null;
+        try {
+          if (typeof specsRaw === 'object') {
+            parsedSpecs = specsRaw;
+          } else if (specsRaw.trim().startsWith('{')) {
+            parsedSpecs = JSON.parse(specsRaw);
+          }
+        } catch (e) {
+          console.log("Specs is not JSON, parsing as key-value lines");
+        }
+
+        if (parsedSpecs && typeof parsedSpecs === 'object') {
+          Object.keys(parsedSpecs).forEach(key => {
             specHtml += `
               <tr>
                 <td class="fw-bold bg-light" style="width:30%">${key}</td>
-                <td>${specs[key]}</td>
+                <td>${parsedSpecs[key]}</td>
               </tr>
             `;
           });
-          specTable.innerHTML = specHtml;
         } else {
-          specTable.innerHTML = '<tr><td colspan="2">No detailed specifications available.</td></tr>';
+          // Parse as Key:Value per line or treat as raw text
+          const lines = specsRaw.split('\n');
+          lines.forEach(line => {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) return; // Skip empty lines
+            
+            const colonIndex = trimmedLine.indexOf(':');
+            if (colonIndex > 0) {
+              const key = trimmedLine.substring(0, colonIndex).trim();
+              const val = trimmedLine.substring(colonIndex + 1).trim();
+              specHtml += `
+                <tr>
+                  <td class="fw-bold bg-light" style="width:30%">${key}</td>
+                  <td>${val}</td>
+                </tr>
+              `;
+            } else {
+              // No colon, treat as a note line spanning both columns
+              specHtml += `
+                <tr>
+                  <td colspan="2" class="text-muted" style="white-space: pre-line;">${trimmedLine}</td>
+                </tr>
+              `;
+            }
+          });
         }
-      } catch (e) {
-        // Fallback if spec is raw text
-        specTable.innerHTML = `<tr><td colspan="2">${p.specifications || 'No detailed specifications available.'}</td></tr>`;
+        
+        specTable.innerHTML = specHtml || '<tr><td colspan="2" class="text-muted text-center py-3">No detailed specifications available.</td></tr>';
       }
     }
 
