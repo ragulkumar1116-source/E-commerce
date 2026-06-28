@@ -166,17 +166,7 @@ function initProductForm() {
     e.preventDefault();
     showLoader();
 
-    // Parse technical specifications key:value lines
     const rawSpecs = document.getElementById('pSpecs').value;
-    const specObj = {};
-    rawSpecs.split('\n').forEach(line => {
-      const idx = line.indexOf(':');
-      if (idx > 0) {
-        const k = line.substring(0, idx).trim();
-        const v = line.substring(idx + 1).trim();
-        if (k) specObj[k] = v;
-      }
-    });
 
     const productData = {
       name: sanitizeInput(document.getElementById('pName').value),
@@ -194,7 +184,7 @@ function initProductForm() {
       shippingAreaId: null, // Clear dynamic delivery area reference
       warranty: sanitizeInput(document.getElementById('pWarranty').value) || '',
       description: sanitizeInput(document.getElementById('pDesc').value),
-      specifications: specObj,
+      specifications: rawSpecs.trim(),
       images: [
         sanitizeInput(document.getElementById('pImg1').value),
         sanitizeInput(document.getElementById('pImg2').value) || null,
