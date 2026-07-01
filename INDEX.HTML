@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Temporarily Unavailable</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#1e293b,#0f172a);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:#fff;
+}
+
+.container{
+    width:90%;
+    max-width:650px;
+    background:#ffffff10;
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:20px;
+    padding:40px;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+
+.icon{
+    font-size:80px;
+    margin-bottom:20px;
+}
+
+h1{
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+p{
+    font-size:18px;
+    line-height:1.8;
+    color:#ddd;
+}
+
+.notice{
+    margin-top:30px;
+    background:#dc2626;
+    padding:15px;
+    border-radius:10px;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.contact{
+    margin-top:30px;
+    font-size:16px;
+    color:#ccc;
+}
+
+.footer{
+    margin-top:35px;
+    color:#aaa;
+    font-size:14px;
+}
+
+button{
+    margin-top:30px;
+    padding:14px 30px;
+    font-size:16px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:#fff;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="icon">⚠️</div>
+
+<h1>Service Temporarily Unavailable</h1>
+
+<p>
+This website is currently unavailable because the server subscription/payment has not yet been renewed.
+</p>
+
+<div class="notice">
+Server access has been temporarily suspended.
+</div>
+
+<p style="margin-top:25px;">
+Please contact the website administrator or service provider to renew the hosting/server payment.
+The service will be restored as soon as the payment has been completed.
+</p>
+
+<button onclick="location.reload();">
+Refresh Page
+</button>
+
+<div class="contact">
+For assistance, please contact the website administrator.
+</div>
+
+<div class="footer">
+© 2026 All Rights Reserved BY KRISH TECK
+</div>
+
+</div>
+
+</body>
+</html>
