@@ -362,32 +362,39 @@ function initDetailsPage() {
     const specTable = document.getElementById('detailSpecsTable');
     if (specTable) {
       let specHtml = '';
-      const specsRaw = p.specifications || '';
+      const specsRaw = p.specifications;
       
-      if (!specsRaw || specsRaw.trim() === '') {
+      if (!specsRaw) {
+        specTable.innerHTML = '<tr><td colspan="2" class="text-muted text-center py-3">No detailed specifications available.</td></tr>';
+      } else if (typeof specsRaw === 'string' && specsRaw.trim() === '') {
         specTable.innerHTML = '<tr><td colspan="2" class="text-muted text-center py-3">No detailed specifications available.</td></tr>';
       } else {
         let parsedSpecs = null;
-        try {
-          if (typeof specsRaw === 'object') {
-            parsedSpecs = specsRaw;
-          } else if (specsRaw.trim().startsWith('{')) {
-            parsedSpecs = JSON.parse(specsRaw);
+        if (typeof specsRaw === 'object') {
+          parsedSpecs = specsRaw;
+        } else if (typeof specsRaw === 'string') {
+          try {
+            if (specsRaw.trim().startsWith('{')) {
+              parsedSpecs = JSON.parse(specsRaw);
+            }
+          } catch (e) {
+            console.log("Specs string is not JSON");
           }
-        } catch (e) {
-          console.log("Specs is not JSON, parsing as key-value lines");
         }
 
         if (parsedSpecs && typeof parsedSpecs === 'object') {
-          Object.keys(parsedSpecs).forEach(key => {
-            specHtml += `
-              <tr>
-                <td class="fw-bold bg-light" style="width:30%">${key}</td>
-                <td>${parsedSpecs[key]}</td>
-              </tr>
-            `;
-          });
-        } else {
+          const keys = Object.keys(parsedSpecs);
+          if (keys.length > 0) {
+            keys.forEach(key => {
+              specHtml += `
+                <tr>
+                  <td class="fw-bold bg-light" style="width:30%">${key}</td>
+                  <td>${parsedSpecs[key]}</td>
+                </tr>
+              `;
+            });
+          }
+        } else if (typeof specsRaw === 'string') {
           // Parse as Key:Value per line or treat as raw text
           const lines = specsRaw.split('\n');
           lines.forEach(line => {

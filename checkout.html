@@ -148,38 +148,65 @@
 
       <!-- Payment Section (Hidden initially until checkout form submitted) -->
       <div class="col-lg-8" id="checkoutPaymentCol" style="display:none">
-        <div class="card p-4 shadow-sm border-light text-center">
-          <h5 class="fw-bold border-bottom pb-2 mb-3 text-start">Pay using Dynamic UPI QR Code</h5>
+        <div class="card p-4 shadow-sm border-light">
+          <h5 class="fw-bold border-bottom pb-2 mb-3"><i class="bi bi-credit-card"></i> Choose Payment Method</h5>
           
-          <p class="text-muted mb-2">Scan the QR code below using Google Pay, PhonePe, Paytm, BHIM, or any UPI app to pay.</p>
-          <h4 class="fw-bold text-primary mb-3" id="payAmountText">₹0.00</h4>
+          <div class="nav nav-pills mb-4 d-flex gap-2" id="paymentTabs" role="tablist">
+            <button class="nav-link active flex-grow-1 py-2.5 fw-bold text-center border" id="cashfree-tab" data-bs-toggle="pill" data-bs-target="#tab-cashfree" type="button" role="tab"><i class="bi bi-shield-lock-fill me-1"></i> Pay Online (Cashfree)</button>
+            <button class="nav-link flex-grow-1 py-2.5 fw-bold text-center border" id="upi-tab" data-bs-toggle="pill" data-bs-target="#tab-upi" type="button" role="tab"><i class="bi bi-qr-code me-1"></i> UPI QR (Manual)</button>
+            <button class="nav-link flex-grow-1 py-2.5 fw-bold text-center border" id="cod-tab" data-bs-toggle="pill" data-bs-target="#tab-cod" type="button" role="tab"><i class="bi bi-cash-coin me-1"></i> Cash on Delivery (COD)</button>
+          </div>
           
-          <div class="d-flex justify-content-center mb-3">
-            <div id="qrCodeContainer" class="p-3 border rounded bg-white shadow-sm">
-              <!-- QR Code renders here -->
+          <div class="tab-content" id="paymentTabContent">
+            <!-- Cashfree Tab -->
+            <div class="tab-pane fade show active text-center py-3" id="tab-cashfree" role="tabpanel">
+              <p class="text-muted">Pay securely using Credit/Debit Cards, Net Banking, UPI (GPay, PhonePe, Paytm), or Wallets via Cashfree.</p>
+              <h3 class="fw-bold text-primary mb-4" id="cashfreeAmountText">₹0.00</h3>
+              <button class="btn btn-primary-gradient btn-lg px-5 py-3 fw-bold shadow" id="btnPayCashfree" onclick="initiateCashfreePayment()"><i class="bi bi-lightning-fill"></i> Pay Now via Cashfree</button>
+              <p class="small text-muted mt-3"><i class="bi bi-shield-check text-success"></i> Secured by Cashfree Payments. Transaction is processed instantly.</p>
+            </div>
+            
+            <!-- Manual UPI QR Tab -->
+            <div class="tab-pane fade text-center" id="tab-upi" role="tabpanel">
+              <p class="text-muted mb-2">Scan the QR code below using Google Pay, PhonePe, Paytm, BHIM, or any UPI app to pay.</p>
+              <h4 class="fw-bold text-primary mb-3" id="payAmountText">₹0.00</h4>
+              
+              <div class="d-flex justify-content-center mb-3">
+                <div id="qrCodeContainer" class="p-3 border rounded bg-white shadow-sm">
+                  <!-- QR Code renders here -->
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+                <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayGpay" href="#"><i class="bi bi-google"></i> GPay</a>
+                <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayPhonepe" href="#"><i class="bi bi-phone"></i> PhonePe</a>
+                <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayPaytm" href="#"><i class="bi bi-wallet"></i> Paytm</a>
+                <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayBhim" href="#"><i class="bi bi-bank"></i> BHIM</a>
+              </div>
+
+              <!-- UTR Form -->
+              <form id="paymentSubmitForm" class="border-top pt-4 text-start">
+                <h6 class="fw-bold mb-3 text-secondary">Confirm your Payment transaction:</h6>
+                <div class="mb-3">
+                  <label class="form-label">Transaction UTR / Ref Number (12 Digits)</label>
+                  <input type="text" class="form-control" id="payUtr" placeholder="Enter the 12-digit UPI reference ID">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Remarks / Note (Optional)</label>
+                  <input type="text" class="form-control" id="payRef" placeholder="e.g. Paid from HDFC account">
+                </div>
+                <button type="submit" class="btn btn-success w-100 py-2.5"><i class="bi bi-check-circle me-1"></i> Submit Transaction Details</button>
+              </form>
+            </div>
+
+            <!-- Cash on Delivery Tab -->
+            <div class="tab-pane fade text-center py-3" id="tab-cod" role="tabpanel">
+              <p class="text-muted">Pay with cash upon delivery of your items. A verification call may be placed before shipment.</p>
+              <h3 class="fw-bold text-primary mb-4" id="codAmountText">₹0.00</h3>
+              <button class="btn btn-success btn-lg px-5 py-3 fw-bold shadow" id="btnPayCod" onclick="placeCodOrder()"><i class="bi bi-check-circle-fill"></i> Confirm Cash on Delivery Order</button>
+              <p class="small text-muted mt-3"><i class="bi bi-info-circle"></i> Additional shipping or COD verification terms may apply.</p>
             </div>
           </div>
-
-          <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
-            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayGpay" href="#"><i class="bi bi-google"></i> GPay</a>
-            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayPhonepe" href="#"><i class="bi bi-phone"></i> PhonePe</a>
-            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayPaytm" href="#"><i class="bi bi-wallet"></i> Paytm</a>
-            <a class="btn btn-outline-dark btn-sm d-flex align-items-center gap-1" id="btnPayBhim" href="#"><i class="bi bi-bank"></i> BHIM</a>
-          </div>
-
-          <!-- UTR Form -->
-          <form id="paymentSubmitForm" class="border-top pt-4 text-start">
-            <h6 class="fw-bold mb-3 text-secondary">Confirm your Payment transaction:</h6>
-            <div class="mb-3">
-              <label class="form-label">Transaction UTR / Ref Number (12 Digits)</label>
-              <input type="text" class="form-control" id="payUtr" placeholder="Enter the 12-digit UPI reference ID" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Remarks / Note (Optional)</label>
-              <input type="text" class="form-control" id="payRef" placeholder="e.g. Paid from HDFC account">
-            </div>
-            <button type="submit" class="btn btn-success w-100 py-2.5"><i class="bi bi-check-circle me-1"></i> Submit Transaction Details</button>
-          </form>
         </div>
       </div>
 
@@ -294,6 +321,7 @@
   <script src="assets/js/common.js?v=1.2"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/davidshimjs-qrcodejs@0.0.2/qrcode.min.js"></script>
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
   <script src="assets/js/checkout.js?v=1.1"></script>
   <script src="assets/js/payment.js?v=1.1"></script>
 </body>

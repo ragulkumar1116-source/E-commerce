@@ -1,8 +1,8 @@
 function addToCart(productId, quantity = 1) {
   getCurrentUser().then(user => {
     if (!user) {
-      showToast('Please login to add items to cart', 'warning');
-      setTimeout(() => window.location.href = 'auth/login.html', 1500);
+      showToast('Please register or login to add items to cart', 'warning');
+      setTimeout(() => window.location.href = 'auth/register.html', 1500);
       return;
     }
 
@@ -221,10 +221,17 @@ if (detailBtnCart) {
 const detailBtnBuy = document.getElementById('detailBtnBuy');
 if (detailBtnBuy) {
   detailBtnBuy.addEventListener('click', () => {
-    const prodId = getUrlParam('id');
-    const qty = Number(document.getElementById('detailQty')?.value) || 1;
-    addToCart(prodId, qty);
-    setTimeout(() => window.location.href = 'checkout.html', 800);
+    getCurrentUser().then(user => {
+      if (!user) {
+        showToast('Please register or login to buy this product', 'warning');
+        setTimeout(() => window.location.href = 'auth/register.html', 1500);
+        return;
+      }
+      const prodId = getUrlParam('id');
+      const qty = Number(document.getElementById('detailQty')?.value) || 1;
+      addToCart(prodId, qty);
+      setTimeout(() => window.location.href = 'checkout.html', 800);
+    });
   });
 }
 

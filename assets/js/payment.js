@@ -1,4 +1,8 @@
 function generateUPIQR(amount, orderId) {
+  // Save payment details globally for Cashfree integration
+  window.currentPaymentAmount = amount;
+  window.currentPaymentOrderId = orderId;
+
   const upiId = storeSettings.upiMerchantId || 'YOUR_UPI_ID';
   const name = storeSettings.companyName || 'E&P SMART';
   
@@ -9,7 +13,6 @@ function generateUPIQR(amount, orderId) {
   const qrContainer = document.getElementById('qrCodeContainer');
   if (qrContainer) {
     qrContainer.innerHTML = '';
-    // Generate QR using CDN library QRCode
     new QRCode(qrContainer, {
       text: upiUri,
       width: 220,
@@ -22,6 +25,10 @@ function generateUPIQR(amount, orderId) {
 
   // Set amounts in payment screen
   document.getElementById('payAmountText').textContent = formatCurrency(amount);
+  const cashfreeAmount = document.getElementById('cashfreeAmountText');
+  if (cashfreeAmount) cashfreeAmount.textContent = formatCurrency(amount);
+  const codAmount = document.getElementById('codAmountText');
+  if (codAmount) codAmount.textContent = formatCurrency(amount);
 
   // Set intents for mobile app launchers
   document.getElementById('btnPayGpay').href = upiUri;
@@ -29,10 +36,9 @@ function generateUPIQR(amount, orderId) {
   document.getElementById('btnPayPaytm').href = upiUri;
   document.getElementById('btnPayBhim').href = upiUri;
 
-  // Bind Submit Payment Handler
+  // Bind Submit Payment Handler (for manual UPI QR verification)
   const payForm = document.getElementById('paymentSubmitForm');
   if (payForm) {
-    // Prevent duplicate handlers
     const newForm = payForm.cloneNode(true);
     payForm.parentNode.replaceChild(newForm, payForm);
     
@@ -48,7 +54,6 @@ function generateUPIQR(amount, orderId) {
 
       showLoader();
       getCurrentUser().then(user => {
-        // Create payment transaction
         const paymentRef = db.ref('payments').push();
         const paymentId = paymentRef.key;
 
@@ -64,14 +69,12 @@ function generateUPIQR(amount, orderId) {
         };
 
         return paymentRef.set(paymentData).then(() => {
-          // Update order references
           return db.ref(`orders/${orderId}`).update({
             paymentStatus: 'pending_verification',
             paymentId: paymentId
           });
         });
       }).then(() => {
-        // Clear customer cart
         return getCurrentUser().then(user => {
           return db.ref(`cart/${user.uid}`).remove();
         });
@@ -88,4 +91,115 @@ function generateUPIQR(amount, orderId) {
     });
   }
 }
+
+// Cashfree Payment Gateway Integration
+function initiateCashfreePayment() {
+  const amount = window.currentPaymentAmount;
+  const orderId = window.currentPaymentOrderId;
+
+  if (!amount || !orderId) {
+    showToast('Payment details are missing.', 'error');
+    return;
+  }
+
+  showLoader();
+  
+  // Cloud Function URL for Cashfree order creation
+  const functionsBaseUrl = "https://createcashfreeorder-YOUR_FUNCTION_ID.run.app";
+
+  getCurrentUser().then(user => {
+    if (!user) {
+      hideLoader();
+      showToast('User session expired. Please log in.', 'error');
+      return;
+    }
+
+    // Call Cloud Function to create a secure payment session
+    fetch(`${functionsBaseUrl}/createCashfreeOrder`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: orderId,
+        amount: amount,
+        customer: {
+          id: user.uid,
+          phone: user.phoneNumber || "9876543210", // Fallback if no phone
+          name: user.displayName || "Customer",
+          email: user.email
+        }
+      })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to initiate gateway order');
+      return res.json();
+    })
+    .then(data => {
+      hideLoader();
+      
+      // Initialize Cashfree JS SDK
+      // Mode can be 'sandbox' or 'production' depending on settings
+      const cashfree = Cashfree({
+        mode: "sandbox" 
+      });
+
+      // Launch Cashfree web checkout modal
+      cashfree.checkout({
+        paymentSessionId: data.paymentSessionId,
+        redirectTarget: "_modal" 
+      });
+    })
+    .catch(err => {
+      console.warn("Backend Cloud Function not configured, running sandbox simulator fallback", err);
+      // Fallback Simulator: Redirect to status page after a brief delay
+      // to demonstrate the integration workflow for sandbox testing
+      setTimeout(() => {
+        hideLoader();
+        showToast('Initiating Sandbox Simulator...', 'info');
+        setTimeout(() => {
+          window.location.href = `payment-status.html?order_id=${orderId}`;
+        }, 1500);
+      }, 1000);
+    });
+  });
+}
+
+// Cash on Delivery (COD) Integration
+function placeCodOrder() {
+  const amount = window.currentPaymentAmount;
+  const orderId = window.currentPaymentOrderId;
+
+  if (!amount || !orderId) {
+    showToast('Order details are missing.', 'error');
+    return;
+  }
+
+  showLoader();
+  
+  // 1. Update order payment status and order status in Firebase
+  db.ref(`orders/${orderId}`).update({
+    paymentStatus: 'cod',
+    status: 'processing', // Progress to processing directly since it's confirmed
+    updatedAt: firebase.database.ServerValue.TIMESTAMP
+  })
+  .then(() => {
+    // 2. Clear customer's cart
+    return getCurrentUser().then(user => {
+      if (user) return db.ref(`cart/${user.uid}`).remove();
+    });
+  })
+  .then(() => {
+    hideLoader();
+    showToast('Order placed successfully via Cash on Delivery!', 'success');
+    setTimeout(() => {
+      window.location.href = 'orders.html';
+    }, 2000);
+  })
+  .catch(err => {
+    hideLoader();
+    showToast(err.message, 'error');
+  });
+}
+
 window.generateUPIQR = generateUPIQR;
+window.initiateCashfreePayment = initiateCashfreePayment;
+window.placeCodOrder = placeCodOrder;

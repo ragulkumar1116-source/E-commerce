@@ -22,8 +22,10 @@ function loadPayments() {
     list.forEach(p => {
       const actionBtn = p.status === 'pending_verification'
         ? `<button class="btn btn-xs btn-success py-1 px-2 small me-1" onclick="verifyPayment('${p.paymentId}', true)"><i class="bi bi-check-circle"></i> Approve</button>
-           <button class="btn btn-xs btn-danger py-1 px-2 small" onclick="verifyPayment('${p.paymentId}', false)"><i class="bi bi-x-circle"></i> Reject</button>`
-        : `<span class="badge ${p.status === 'approved' ? 'bg-success' : 'bg-danger'}">${p.status.toUpperCase()}</span>`;
+           <button class="btn btn-xs btn-danger py-1 px-2 small me-1" onclick="verifyPayment('${p.paymentId}', false)"><i class="bi bi-x-circle"></i> Reject</button>
+           <button class="btn btn-xs btn-outline-danger py-1 px-2 small" onclick="deletePayment('${p.paymentId}')"><i class="bi bi-trash"></i> Delete</button>`
+        : `<span class="badge ${p.status === 'approved' ? 'bg-success' : 'bg-danger'} me-1">${p.status.toUpperCase()}</span>
+           <button class="btn btn-xs btn-outline-danger py-1 px-2 small" onclick="deletePayment('${p.paymentId}')"><i class="bi bi-trash"></i> Delete</button>`;
 
       html += `
         <tr>
@@ -90,4 +92,19 @@ function verifyPayment(paymentId, approve) {
   }
 }
 
+function deletePayment(paymentId) {
+  if (confirm(`Are you sure you want to permanently delete payment transaction record #${paymentId}? This action cannot be undone.`)) {
+    showLoader();
+    db.ref(`payments/${paymentId}`).remove().then(() => {
+      hideLoader();
+      showToast(`Payment record deleted successfully`, 'success');
+      loadPayments();
+    }).catch(e => {
+      hideLoader();
+      showToast(e.message, 'error');
+    });
+  }
+}
+
 window.verifyPayment = verifyPayment;
+window.deletePayment = deletePayment;
